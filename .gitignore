@@ -6,6 +6,9 @@ data/raw/*
 # data/processed/*
 # !data/processed/.gitkeep
 
+# Banco SQLite (gerado pelo script, regeneravel a partir dos CSVs - nao versionar binario)
+*.db
+
 # Python
 __pycache__/
 *.py[cod]
