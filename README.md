@@ -61,9 +61,11 @@ projeto-olist-bi/
 - **Frete sobe com a distância, mas cancelamento cai**: o valor médio do frete cresce de ~R$14 (até 200km) para ~R$35 (acima de 1.000km), como esperado — mas a taxa de cancelamento na verdade *diminui* com a distância (de 0,76% para 0,26%), o oposto do que a intuição sugeriria. Vale investigar se isso se explica pelo perfil de produto comprado a longa distância.
 - **Sazonalidade**: o volume de vendas cresce de forma consistente ao longo dos meses do período analisado, com segundas-feiras concentrando o maior número de pedidos e finais de semana os menores.
 
-_(dados extraídos das queries em `sql/`, a partir de `sql/olist.db` gerado por `notebooks/clean_and_load.py`)_
+_(dados extraídos das queries em `sql/`, rodadas no SQL Server via SSMS sobre as tabelas geradas por `notebooks/clean_and_load.py` + `sql/00_criar_tabelas_e_importar.sql`)_
 
-![Query no DB Browser for SQLite: atraso vs nota de avaliação](docs/query-atraso-vs-avaliacao.png)
+![Query 01: atraso por estado e categoria](docs/query-01-atraso-regiao-categoria.png)
+
+![Query 02: atraso vs nota de avaliação](docs/query-02-atraso-vs-avaliacao.png)
 
 ## Dashboard
 
