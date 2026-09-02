@@ -1,0 +1,26 @@
+# Dados brutos (baixe do Kaggle localmente, não versione)
+data/raw/*
+!data/raw/.gitkeep
+
+# Dados processados grandes (opcional: descomente se ficarem pesados)
+# data/processed/*
+# !data/processed/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.ipynb_checkpoints/
+.venv/
+venv/
+env/
+.env
+
+# Power BI
+*.pbix.bak
+~$*.pbix
+
+# Sistema operacional / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
