@@ -69,11 +69,17 @@ _(dados extraídos das queries em `sql/`, rodadas no SQL Server via SSMS sobre a
 
 ## Dashboard
 
-_(inserir aqui 1-2 prints do dashboard final, salvos em `docs/`, por exemplo:)_
+O dashboard final tem 2 páginas no Power BI (`dashboard/projeto-olist.pbix`):
 
-```
-![Visão geral do dashboard](docs/dashboard-overview.png)
-```
+**Visão Geral** — KPIs principais, receita por categoria, % de atraso por estado e evolução mensal de pedidos.
+
+![Dashboard - Visão Geral](docs/dashboard-pagina1-visao-geral.png)
+
+**Logística e Frete** — frete médio e % de cancelamento por faixa de distância (mostrando o achado contraintuitivo: frete sobe, cancelamento cai), e pedidos por dia da semana.
+
+![Dashboard - Logística e Frete](docs/dashboard-pagina2-logistica-frete.png)
+
+> Nota: a queda brusca de pedidos em set/out de 2018 no gráfico de evolução mensal não reflete uma queda real de vendas — é uma limitação conhecida do dataset público da Olist, cuja coleta de dados é bem esparsa a partir de agosto/2018.
 
 ## Autora
 
