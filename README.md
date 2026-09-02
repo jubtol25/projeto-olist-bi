@@ -27,7 +27,7 @@ O projeto foi guiado pelas seguintes perguntas:
 
 ## Ferramentas utilizadas
 
-- **SQL** — modelagem e consultas (ex.: SQLite/PostgreSQL local)
+- **SQL Server** (T-SQL) — modelagem e consultas, via SQL Server Express + SSMS
 - **Python** (pandas) — limpeza, tratamento e enriquecimento dos dados
 - **Power BI** — modelagem semântica (DAX) e dashboard final
 
@@ -48,13 +48,22 @@ projeto-olist-bi/
 ## Como reproduzir
 
 1. Baixe o dataset no Kaggle e extraia os `.csv` para `data/raw/`.
-2. Rode os scripts em `notebooks/` para limpar e tratar os dados (gera arquivos em `data/processed/`).
-3. Use os scripts em `sql/` para criar as tabelas e rodar as queries de análise (em SQLite, PostgreSQL, ou direto no Power Query).
-4. Abra `dashboard/projeto-olist.pbix` no Power BI Desktop, aponte a fonte de dados para `data/processed/` e atualize o modelo.
+2. Rode `python notebooks/clean_and_load.py` para limpar e tratar os dados (gera `data/processed/fact_orders.csv` e `data/processed/dim_products.csv`).
+3. No SQL Server Management Studio (SSMS), crie um banco chamado `olist_bi` e rode o script `sql/00_criar_tabelas_e_importar.sql` (cria as tabelas com os tipos corretos e importa os CSVs via `BULK INSERT` — mais confiável do que o assistente gráfico de importação, que tem bugs de conversão decimal).
+4. Rode as queries em `sql/01` a `sql/05` (T-SQL) direto no SSMS para explorar as respostas às perguntas de negócio.
+5. Abra `dashboard/projeto-olist.pbix` no Power BI Desktop, conecte na fonte SQL Server (`localhost\SQLEXPRESS`, banco `olist_bi`) e atualize o modelo.
 
 ## Principais insights
 
-_(preencher depois de concluir a análise — resuma aqui em 3 a 5 bullets os achados mais relevantes, com números. É a parte que mais chama atenção de quem visita o repositório.)_
+- **Atraso é o maior destruidor de satisfação**: pedidos entregues com atraso têm nota média de avaliação de **2.27**, contra **4.29** dos pedidos entregues no prazo — de longe o fator com maior impacto na experiência do cliente.
+- **Atraso concentrado geograficamente**: estados do Nordeste, como Maranhão e Alagoas, apresentam as maiores taxas de atraso por categoria de produto (até ~45% dos pedidos), provavelmente por ficarem mais distantes dos centros de distribuição concentrados no Sudeste.
+- **Categorias que mais geram receita**: saúde/beleza, relógios/presentes e cama/mesa/banho lideram o faturamento total no período analisado.
+- **Frete sobe com a distância, mas cancelamento cai**: o valor médio do frete cresce de ~R$14 (até 200km) para ~R$35 (acima de 1.000km), como esperado — mas a taxa de cancelamento na verdade *diminui* com a distância (de 0,76% para 0,26%), o oposto do que a intuição sugeriria. Vale investigar se isso se explica pelo perfil de produto comprado a longa distância.
+- **Sazonalidade**: o volume de vendas cresce de forma consistente ao longo dos meses do período analisado, com segundas-feiras concentrando o maior número de pedidos e finais de semana os menores.
+
+_(dados extraídos das queries em `sql/`, a partir de `sql/olist.db` gerado por `notebooks/clean_and_load.py`)_
+
+![Query no DB Browser for SQLite: atraso vs nota de avaliação](docs/query-atraso-vs-avaliacao.png)
 
 ## Dashboard
 

@@ -1,4 +1,5 @@
 -- Pergunta 3: como vendas e ticket medio variam por mes e por dia da semana?
+-- (SQL Server / T-SQL)
 SELECT
     purchase_month,
     COUNT(*)                        AS n_pedidos,

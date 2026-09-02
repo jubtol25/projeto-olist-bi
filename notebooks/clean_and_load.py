@@ -169,6 +169,15 @@ def build_fact_orders(tables: dict) -> pd.DataFrame:
     fact["purchase_month"] = fact["order_purchase_timestamp"].dt.to_period("M").astype(str)
     fact["purchase_weekday"] = fact["order_purchase_timestamp"].dt.day_name()
 
+    # Colunas que sao conceitualmente inteiras (dias, contagens, notas, flag 0/1) mas
+    # ficaram como float por causa dos NaN: convertidas para Int64 (inteiro que aceita
+    # nulo). Isso evita que fiquem como "1.0", "27.0" etc no CSV - o assistente de
+    # importacao do SQL Server confunde esse ".0" com separador de milhar e multiplica
+    # o valor por 10. Como inteiro puro ("1", "27", vazio se nulo) essa ambiguidade some.
+    int_like_cols = ["delivery_delay_days", "is_late", "n_items", "payment_installments_max", "review_score"]
+    for col in int_like_cols:
+        fact[col] = fact[col].round().astype("Int64")
+
     cols = [
         "order_id", "customer_id", "customer_state", "customer_city",
         "order_status", "order_purchase_timestamp", "order_delivered_customer_date",
