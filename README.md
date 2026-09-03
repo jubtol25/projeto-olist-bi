@@ -10,15 +10,24 @@ Este projeto simula o trabalho de um(a) analista de BI que precisa entender **on
 
 ## Perguntas de negócio
 
-O projeto foi guiado pelas seguintes perguntas:
+O projeto foi guiado pelas 5 perguntas abaixo — cada uma respondida com base nas queries em `sql/01` a `sql/05` e no dashboard final.
 
-1. **Atraso de entrega**: qual o percentual de pedidos entregues após o prazo estimado, e como isso varia por região (estado) e por categoria de produto?
-2. **Satisfação do cliente**: existe relação entre atraso na entrega e a nota de avaliação (review score) dada pelo cliente?
-3. **Sazonalidade**: como o volume de vendas e o ticket médio variam ao longo dos meses/dias da semana? Existem picos que a operação deveria se preparar melhor para atender?
-4. **Categorias e regiões mais relevantes**: quais categorias de produto e quais estados geram mais receita, e quais têm a pior relação entre receita e satisfação/atraso?
-5. **Frete**: qual a relação entre o valor do frete e a distância entre vendedor e cliente, e isso impacta a decisão de compra (cancelamentos)?
+**1. Atraso de entrega — qual o percentual de pedidos entregues após o prazo estimado, e como isso varia por região e categoria?**
+No geral, **6,77%** dos pedidos entregues chegam depois da data estimada. Esse percentual não é uniforme: por estado, varia de ~21,4% em Alagoas (o pior caso) até ~9,7% em Mato Grosso do Sul (um dos melhores). Olhando por combinação estado+categoria, o pior caso chega a **45,5%** (Maranhão, categoria housewares). O padrão geral é claro: estados do Norte/Nordeste, mais distantes dos centros de distribuição concentrados no Sudeste, têm taxas de atraso bem mais altas.
 
-> Ajuste esta lista conforme os achados forem aparecendo — no BI é normal a análise revelar novas perguntas pelo caminho.
+**2. Satisfação do cliente — existe relação entre atraso e nota de avaliação?**
+Sim, e é a relação mais forte encontrada no projeto: pedidos entregues **com atraso** têm nota média de **2,27** (de 5), contra **4,29** para os entregues **no prazo**. O atraso na entrega é, disparado, o fator que mais derruba a satisfação do cliente nesse marketplace.
+
+**3. Sazonalidade — como vendas e ticket médio variam ao longo do tempo?**
+O volume de pedidos cresce de forma consistente entre set/2016 e meados de 2018 (com uma queda no fim que é uma limitação do dataset, não do negócio — ver nota na seção Dashboard). Por dia da semana, segunda-feira concentra o maior volume de pedidos (16,2 mil) e vai caindo ao longo da semana até sábado, o mais fraco (10,9 mil) — um padrão típico de e-commerce, com mais compras em dias úteis.
+
+**4. Categorias e regiões mais relevantes — quais geram mais receita, e quais têm pior relação receita x satisfação/atraso?**
+As categorias que mais geram receita são **saúde/beleza** (R$ 1,26 Mi), **relógios/presentes** (R$ 1,20 Mi) e **cama/mesa/banho** (R$ 1,04 Mi). Cruzando com atraso: combinações de alto volume mas atraso elevado (como saúde/beleza no Maranhão, com 24,4% de atraso) representam o maior risco — são categorias relevantes financeiramente, mas com experiência de entrega ruim numa região específica, o que pede atenção prioritária da operação.
+
+**5. Frete — qual a relação entre frete, distância e cancelamento?**
+O frete médio sobe de forma esperada com a distância entre vendedor e cliente: de **R$ 14,63** (até 200km) para **R$ 35,53** (acima de 1.000km). O achado contraintuitivo é que a taxa de cancelamento faz o caminho **inverso**, caindo de **1,35%** (até 200km) para **0,26%** (acima de 1.000km) — ou seja, pedidos de longa distância cancelam menos, não mais, apesar do frete mais caro. Uma hipótese é que compras de longa distância tendem a ser mais deliberadas (o cliente já sabe que vai pagar mais caro e decide mesmo assim), enquanto compras locais têm mais desistência por impulso.
+
+> As perguntas originais que guiaram o projeto estão preservadas acima; no dia a dia de BI é normal que a análise revele novas perguntas pelo caminho — os achados extras (como a hipótese do item 5) valem como próximos passos de investigação.
 
 ## Fonte de dados
 
@@ -53,15 +62,9 @@ projeto-olist-bi/
 4. Rode as queries em `sql/01` a `sql/05` (T-SQL) direto no SSMS para explorar as respostas às perguntas de negócio.
 5. Abra `dashboard/projeto-olist.pbix` no Power BI Desktop, conecte na fonte SQL Server (`localhost\SQLEXPRESS`, banco `olist_bi`) e atualize o modelo.
 
-## Principais insights
+## Evidências (queries)
 
-- **Atraso é o maior destruidor de satisfação**: pedidos entregues com atraso têm nota média de avaliação de **2.27**, contra **4.29** dos pedidos entregues no prazo — de longe o fator com maior impacto na experiência do cliente.
-- **Atraso concentrado geograficamente**: estados do Nordeste, como Maranhão e Alagoas, apresentam as maiores taxas de atraso por categoria de produto (até ~45% dos pedidos), provavelmente por ficarem mais distantes dos centros de distribuição concentrados no Sudeste.
-- **Categorias que mais geram receita**: saúde/beleza, relógios/presentes e cama/mesa/banho lideram o faturamento total no período analisado.
-- **Frete sobe com a distância, mas cancelamento cai**: o valor médio do frete cresce de ~R$14 (até 200km) para ~R$35 (acima de 1.000km), como esperado — mas a taxa de cancelamento na verdade *diminui* com a distância (de 0,76% para 0,26%), o oposto do que a intuição sugeriria. Vale investigar se isso se explica pelo perfil de produto comprado a longa distância.
-- **Sazonalidade**: o volume de vendas cresce de forma consistente ao longo dos meses do período analisado, com segundas-feiras concentrando o maior número de pedidos e finais de semana os menores.
-
-_(dados extraídos das queries em `sql/`, rodadas no SQL Server via SSMS sobre as tabelas geradas por `notebooks/clean_and_load.py` + `sql/00_criar_tabelas_e_importar.sql`)_
+Prints das queries em `sql/` rodadas no SSMS, mostrando os números por trás das respostas acima:
 
 ![Query 01: atraso por estado e categoria](docs/query-01-atraso-regiao-categoria.png)
 
